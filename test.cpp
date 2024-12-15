@@ -1,16 +1,27 @@
 #include <iostream>
 #include <string>
-#include <vector>
+#include <list>
 using namespace std;
 
 class Book
 {
     private:
-        int bookID;
         string name;
         string author;
         bool availability;
+
     public:
+
+        Book(string bookName = "", string bookAuthor = "", bool isAvailable = true)
+        : name(bookName), author(bookAuthor), availability(isAvailable) 
+        {
+
+        }
+
+        string getName()
+        {
+            return name;
+        }
 
         void setName(string newName)
         {
@@ -22,22 +33,32 @@ class Book
             author = newAuthor;
         }
 
-        bool updateAvailability(bool availability)
+        void updateAvailability(bool newAvailability)
         {
-             return availability;
+             availability = newAvailability;
         }
+
+        bool isAvailable()
+        {
+            return availability;
+        }
+
 };
 
 class Cart
 {
     private:
-        int cartID;
-        vector<Book> items;
+        list<Book*> items;
     
     public:
-        void addItem(Book item) 
+
+        list<Book*>& getItems() 
         {
-            items.push_back(item);
+            return items;
+        }
+        void addItem(Book* book_item) 
+        {
+            items.push_back(book_item);
         }
 };
 
@@ -46,7 +67,6 @@ class Person
     protected:
         int age;
         string name;
-        bool document;
     
     public:
 
@@ -69,11 +89,15 @@ class Person
 class Reader : public Person
 {
     private:
-        bool ticket;
         Cart personal_cart;
     
     public:
-        void addBookToCart(Book item)
+        
+        Cart& getCart()
+        {
+            return personal_cart;
+        }
+        void addBookToCart(Book* item)
         {
             personal_cart.addItem(item);
         }
@@ -83,60 +107,74 @@ class Reader : public Person
 class Librarian : public Person
 {
     private:
-        string affiliation;
-        bool education;
-        int salary;
+
+        Book book_item;
 
     public:
-        void giveBookToReader()
+
+        void addBookToLibrary(Book& book_item, string name, string author)
         {
-            cout<<"Reader can borrow this book succesfully!\n";
+            book_item.setName(name);
+            book_item.setAuthor(author);
+            book_item.updateAvailability(1);
         }
-        void declineReaderRequest()
+
+        void removeBookFromLibrary(Book book_item)
         {
-            cout<<"Reader cannot borrow this book.\n";
+            book_item.updateAvailability(0);
+        }
+
+        void checkReaderRequest(Reader& client)
+        {
+            Cart& cart = client.getCart();
+            list<Book*>& items = cart.getItems();
+
+            for (Book* book : items)
+            {
+                if (book->isAvailable())
+                {
+                cout << "Reader " << client.getName() << " can borrow the book titled '"
+                     << book->getName() << "' successfully!\n";
+                book->updateAvailability(0);
+                }
+                else
+                {
+                    cout << "Reader " << client.getName() << " cannot borrow the book titled '"
+                         << book->getName() << "' as it is unavailable.\n";
+                }
+            }
         }
 };
 
 
 int main()
 {
-    Reader client1;
-    client1.setName("Petro Ivanenko");
-    client1.setAge(19);
-
     Librarian worker;
     worker.setName("Olena Savchenko");
     worker.setAge(51);
 
     Book item1;
-    item1.setAuthor("Lyubko Deresh");
-    item1.setName("Cult");
-    bool bookAvailability1 = item1.updateAvailability(1);
+    worker.addBookToLibrary(item1, "Cult", "Lyubko Deresh");
 
-    client1.addBookToCart(item1);
+    Book item2;
+    worker.addBookToLibrary(item2, "Voroshylovhrad", "Serhiy Zhadan");
 
-    if (bookAvailability1 == 1)
-        worker.giveBookToReader();
-    else
-        worker.declineReaderRequest();
+    Reader client1;
+    client1.setName("Petro Ivanenko");
+    client1.setAge(19);
+
+    client1.addBookToCart(&item1);
+    worker.checkReaderRequest(client1);
 
     Reader client2;
     client2.setName("Olha Hryhorchuk");
     client2.setAge(33);
 
     cout<<endl;
-    Book item2;
-    item2.setAuthor("Serhiy Zhadan");
-    item2.setName("Voroshylovhrad");
-    bool bookAvailability2 = item2.updateAvailability(0);
 
-    client2.addBookToCart(item2);
-
-    if (bookAvailability2 == 1)
-        worker.giveBookToReader();
-    else
-        worker.declineReaderRequest();
+    client2.addBookToCart(&item2);
+    client2.addBookToCart(&item1);
+    worker.checkReaderRequest(client2);
 
     return 0;
 }
