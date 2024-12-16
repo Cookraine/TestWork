@@ -12,7 +12,6 @@ class Book
 
     public:
 
-
         string getName()
         {
             return name;
