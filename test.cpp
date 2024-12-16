@@ -100,10 +100,6 @@ class Reader : public Person
 
 class Librarian : public Person
 {
-    private:
-
-        Book book_item;
-
     public:
 
         void addBookToLibrary(Book& book_item, string title, string author)
