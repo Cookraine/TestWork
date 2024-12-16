@@ -6,20 +6,20 @@ using namespace std;
 class Book
 {
     private:
-        string name;
+        string title;
         string author;
         bool availability;
 
     public:
 
-        string getName()
+        string getTitle()
         {
-            return name;
+            return title;
         }
 
-        void setName(string newName)
+        void setTitle(string newTitle)
         {
-            name = newName;
+            title = newTitle;
         }
 
         void setAuthor(string newAuthor)
@@ -106,9 +106,9 @@ class Librarian : public Person
 
     public:
 
-        void addBookToLibrary(Book& book_item, string name, string author)
+        void addBookToLibrary(Book& book_item, string title, string author)
         {
-            book_item.setName(name);
+            book_item.setTitle(title);
             book_item.setAuthor(author);
             book_item.updateAvailability(1);
         }
@@ -128,13 +128,13 @@ class Librarian : public Person
                 if (book->isAvailable())
                 {
                 cout << "Reader " << client.getName() << " can borrow the book titled '"
-                     << book->getName() << "' successfully!\n";
+                     << book->getTitle() << "' successfully!\n";
                 book->updateAvailability(0);
                 }
                 else
                 {
                     cout << "Reader " << client.getName() << " cannot borrow the book titled '"
-                         << book->getName() << "' as it is unavailable.\n";
+                         << book->getTitle() << "' as it is unavailable.\n";
                 }
             }
         }
