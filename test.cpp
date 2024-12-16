@@ -12,11 +12,6 @@ class Book
 
     public:
 
-        Book(string bookName = "", string bookAuthor = "", bool isAvailable = true)
-        : name(bookName), author(bookAuthor), availability(isAvailable) 
-        {
-
-        }
 
         string getName()
         {
