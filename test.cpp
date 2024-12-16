@@ -113,11 +113,6 @@ class Librarian : public Person
             book_item.updateAvailability(1);
         }
 
-        void removeBookFromLibrary(Book book_item)
-        {
-            book_item.updateAvailability(0);
-        }
-
         void checkReaderRequest(Reader& client)
         {
             Cart& cart = client.getCart();
@@ -159,12 +154,11 @@ int main()
 
     client1.addBookToCart(&item1);
     worker.checkReaderRequest(client1);
+    cout<<endl;
 
     Reader client2;
     client2.setName("Olha Hryhorchuk");
     client2.setAge(33);
-
-    cout<<endl;
 
     client2.addBookToCart(&item2);
     client2.addBookToCart(&item1);
